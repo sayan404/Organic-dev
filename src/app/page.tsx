@@ -1,14 +1,17 @@
 import Image from "next/image";
 // import Modal from "../components/Modal";
 import Link from "next/link";
-import MultiButton from "./components/Multibutton";
+import "./globals.css";
+import MultiButton from "../components/Multibutton";
+import Header from "../components/Header";
+import Hero from "../components/Hero";
 
 const Index: React.FC = async () => {
   return (
-    <div className="w-full h-screen flex justify-center items-center ">
-      Hey Solana is here
-      <MultiButton />
-    </div>
+    <main>
+      <Header />
+      <Hero />
+    </main>
   );
 };
 
