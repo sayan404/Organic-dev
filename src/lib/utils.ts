@@ -1,4 +1,5 @@
 //write all utility functions here
+import axios from 'axios';
 
 export const handleError = (error: unknown) => {
   if (error instanceof Error) {
@@ -13,5 +14,28 @@ export const handleError = (error: unknown) => {
     // This is an unknown type of error
     console.error(error);
     throw new Error(`Unknown error: ${JSON.stringify(error)}`);
+  }
+};
+
+export const matchOrgans = async (url: string, prompt: string, organDesc: string, organTobeMatchedDesc: string) => {
+  try {
+    const response: any = await axios.post(url, {
+      contents: [
+        {
+          parts: [
+            {
+              text:
+                prompt +
+                `data-1: ${organDesc}, data-2: ${organTobeMatchedDesc}`,
+            },
+          ],
+        },
+      ],
+    });
+  
+    return response.data?.candidates?.content?.parts?.text;
+  }
+  catch(error) {
+    handleError(error);
   }
 };

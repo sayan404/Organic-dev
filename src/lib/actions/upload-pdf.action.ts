@@ -1,5 +1,5 @@
 'use server';
-import { handleError } from './utils';
+import { handleError } from '../utils';
 import axios from 'axios';
 import dbConnect from '@/src/config/dbConfig';
 
@@ -13,7 +13,7 @@ const config: any = {
 export async function uploadFiles(formData: any, organId: string) {
   try {
     //db connect
-    dbConnect();
+    await dbConnect();
     const response = await axios.post(
       'https://api.chatpdf.com/v1/sources/add-file',
       formData,
