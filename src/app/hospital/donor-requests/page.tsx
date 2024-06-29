@@ -9,10 +9,10 @@ const DonorRequestsPage = () => {
   useEffect(() => {
     // document.title = "Donor Requests - ACME";
     const hospitalId = "1";
-    async function fetchData() {
-      const donorRequestDataResponse = await axios.get(`/api/hospital/donorRequest?hospitalId=${hospitalId}`);
-    }
-    fetchData();
+    // async function fetchData() {
+    //   const donorRequestDataResponse = await axios.get(`/api/hospital/donorRequest?hospitalId=${hospitalId}`);
+    // }
+    // fetchData();
   }, []);
   return (
     <div className="mx-[100px] my-[40px]">
