@@ -11,6 +11,11 @@
   "dependencies": {
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-react": "^0.15.35",
+    "@heroicons/react": "^2.1.4",
+    "@nextui-org/button": "^2.0.34",
+    "@nextui-org/react": "^2.4.2",
+    "@nextui-org/system": "^2.2.2",
+    "@nextui-org/theme": "^2.2.6",
     "@solana/wallet-adapter-react-ui": "^0.9.35",
     "@solana/wallet-adapter-wallets": "^0.19.32",
     "@solana/web3.js": "^1.93.2",
@@ -18,9 +23,12 @@
     "bcrypt": "^5.1.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.4",
+    "framer-motion": "^11.2.12",
     "next": "14.2.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
+    "react-lottie": "^1.2.4"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
