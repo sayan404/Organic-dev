@@ -35,7 +35,7 @@ export async function uploadFiles(formData: any, organId: string) {
         messages: [
           {
             role: 'user',
-            content: 'give me the summery of the entire pdf file',
+            content: 'Geve me the entire text data of the pdf file in a well curated manner in such a way that it should resembles with a medical report of the organ related data, parameter used for matching the organs needed for a reciever with the donor organ details.',
           },
         ],
       },
