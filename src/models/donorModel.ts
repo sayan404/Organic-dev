@@ -18,6 +18,8 @@ interface IDonor extends Document {
     emailId: string;
     occupation: string;
     aadharNo: string;
+    organs: string[];
+    status: "Pending" | "Donated" | "Rejected";
 }
 
 const DonorSchema: Schema = new Schema(
@@ -59,6 +61,6 @@ const DonorSchema: Schema = new Schema(
     }
 );
 
-const Donor =  mongoose.models.Donor || mongoose.model<IDonor>("Donor", DonorSchema);
+const Donor =  (mongoose.models.Donor as mongoose.Model<IDonor>) || mongoose.model<IDonor>("Donor", DonorSchema);
 
 export default Donor;
