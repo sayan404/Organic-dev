@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/src/config/dbConfig";
 import organReceiverModal from "@/src/models/organReceiverModal";
 import axios from "axios";
+import { uploadFiles } from "@/src/lib/actions/upload-pdf.action";
 
 export async function POST(req: NextRequest) {
     try {
@@ -24,13 +25,13 @@ export async function POST(req: NextRequest) {
             patientMobileNo,
             patientEmailId,
             patientOrgan,
-            patientOrganRelatedDocs,
+            patientOrganRelatedDoc,
             referredDoctorName,
             referredDoctorRegId,
             patientMedicalConditionExplanation,
             organAlotmentStatus
         } = await req.json();
-
+        const formData = req.body // have to be the form data
         // Validate required fields
         // if (!hospitalId || !hospitalMobileNo || !hospitalEmailId || !organType || !patientDetailsName || !patientDetailsAge || !patientDetailsMedicalConditionExplanation || !severity || !patientCity || !patientDistrict || !patientPincode || !patientDOB || !patientAge || !patientGender || !patientBloodGroup || !patientMobileNo || !patientEmailId || !patientOrgan || !patientOrganRelatedDocs || !referredDoctorName || !referredDoctorRegId) {
         //     return NextResponse.json(
@@ -58,7 +59,8 @@ export async function POST(req: NextRequest) {
             patientMobileNo,
             patientEmailId,
             patientOrgan,
-            patientOrganRelatedDocs,
+            patientOrganRelatedDoc,
+            allTextOrganData: "No data yet",
             referredDoctorName,
             referredDoctorRegId,
             organAlotmentStatus
@@ -72,13 +74,62 @@ export async function POST(req: NextRequest) {
                 { status: 500 }
             );
         }
-        // const matchedOrganRequests = await axios.get()
+        console.log("savedNewOrganRequest", savedNewOrganRequest);
+        let textData = "";
+        try {
+            if (formData) {
+                const fileTextData = await uploadFiles(formData, savedNewOrganRequest._id);
+                savedNewOrganRequest.allTextOrganData = fileTextData;
+                await savedNewOrganRequest.save();
+                textData = fileTextData;
+            }
+        }
 
+        catch (error: any) {
+            console.log("Failed to genretae text data from pdf file", error);
 
+        }
+        const organToBeMatched = {
+            organType,
+            patientName,
+            patientAge,
+            patientMedicalConditionExplanation,
+            severity,
+            patientCity,
+            patientDistrict,
+            patientPincode,
+            patientDOB,
+            patientGender,
+            patientBloodGroup,
+            patientMobileNo,
+            patientEmailId,
+            patientOrgan,
+            patientOrganRelatedDoc,
+            patientOrganRelatedDocInText: textData,
+            referredDoctorName,
+            referredDoctorRegId,
+            organAlotmentStatus
+        }
+        const message = "FROM_RECEIVER_TO_DONOR_ORGAN_MATCHER"
+        const matchedOrganRequests = await axios.post("http://localhost:3000/api/matcher", { message, organType, organToBeMatched })
+        if (matchedOrganRequests) {
+            return NextResponse.json(
+                {
+                    message: "Got a match for the organ",
+                    organRequest: matchedOrganRequests,
+                },
+                { status: 201 }
+            );
+        }
+        else {
+            return NextResponse.json(
+                { message: 'No receiver found' },
+                { status: 200 }
+            );
+        }
         // return NextResponse.json(
         //     {
-        //         message: "Organ request created successfully",
-        //         organRequest: newOrganRequest,
+        //         message: "Some error happened while matching the organ request, please try again later."
         //     },
         //     { status: 201 }
         // );

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { handleError } from '@/src/lib/utils';
 import dbConnect from '@/src/config/dbConfig';
 import { matchOrgans } from '@/src/lib/utils';
+import axios from 'axios';
 
 // gemini api = AIzaSyB8a7KZ9yRlLCi0OF54x3gSChWqhM7pvM8
 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyB4DolawuSc0QEhkiKTh3XVPOkRu3RrIhw`;
@@ -15,34 +16,68 @@ percentage(only number between 0 to 100 not the '%' sign) of the commparison of 
 take data-2 as a base and compare it with the data-1 and give the the desired result as instructed. give the match percentage only of two data `;
 
 export async function POST(req: NextRequest) {
+  // TODO: CALL THE GET METHOD TO GET ALL RECEIVER && ORGAN DATA  /
+  // will pass the ref and target 
+  const { message, organType, organToBeMatched } = await req.json();
   try {
-    await dbConnect();
     const matchPercentageList: string[] = [];
     const potentialOrgans: any[] = [];
 
-    const { organsList, organToBeMatched } = await req.json();
+    if (message === "FROM_RECEIVER_TO_DONOR_ORGAN_MATCHER") {
+      const url = 'http://localhost:3000/api/hospital/getReceiverDataForMatcher?organType=' + organType;
+      const response = await axios.get(url);
 
-    organsList.forEach(async (organ: { organId: string; desc: string }) => {
-      const response: string =
-        (await matchOrgans(url, prompt, organ.desc, organToBeMatched.desc)) ||
-        '0';
-      //store match percentages
-      matchPercentageList.push(response);
-    });
+      const { organsList, organToBeMatched } = await req.json();
+      console.log("organsList, organToBeMatched ", organsList, organToBeMatched);
+      await organsList.forEach(async (organ: { organId: string; desc: string }) => {
+        const response: string = (await matchOrgans(url, prompt, organ.desc, organToBeMatched.desc)) || '0';
+        //store match percentages
+        matchPercentageList.push(response);
+      });
 
-    //get the index of the organs with match greater than 60%
-    matchPercentageList.forEach((percentage) => {
-      parseInt(percentage) > 60 &&
-        potentialOrgans.push(organsList[parseInt(percentage)]);
-    });
+      //get the index of the organs with match greater than 60%
+      matchPercentageList.forEach((percentage) => {
+        parseInt(percentage) > 50 &&
+          potentialOrgans.push(organsList[parseInt(percentage)]);
+      });
 
-    //return the organid's of the potential matches
-    return NextResponse.json(
-      {
-        potentialOrgans,
-      },
-      { status: 201 }
-    );
+      //return the organid's of the potential matches
+      return NextResponse.json(
+        {
+          potentialOrgans,
+        },
+        { status: 201 }
+      );
+    }
+    else {
+      const url = 'http://localhost:3000/api/hospital/eligibleDonorDocUpload?organType=' + organType;
+      const response = await axios.get(url);
+
+      const organsList = response.data.data;
+      console.log("organsList", organsList);
+
+      organsList.forEach(async (organ: { organId: string; desc: string }) => {
+        const response: string =
+          (await matchOrgans(url, prompt, organ.desc, organToBeMatched.desc)) ||
+          '0';
+        //store match percentages
+        matchPercentageList.push(response);
+      });
+
+      //get the index of the organs with match greater than 60%
+      matchPercentageList.forEach((percentage) => {
+        parseInt(percentage) > 60 &&
+          potentialOrgans.push(organsList[parseInt(percentage)]);
+      });
+
+      //return the organid's of the potential matches
+      return NextResponse.json(
+        {
+          potentialOrgans,
+        },
+        { status: 201 }
+      );
+    }
   } catch (e) {
     handleError(e);
   }

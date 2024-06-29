@@ -1,3 +1,4 @@
+"use client"
 import {
   Navbar,
   NavbarBrand,
@@ -18,27 +19,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Navbar className="shadow-lg">
         <NavbarBrand>
           {/* <AcmeLogo /> */}
-          <p className="font-bold text-inherit">ACME</p>
+          <p className="font-bold text-inherit"><Link href="/home">ACME</Link></p>
         </NavbarBrand>
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           <NavbarItem>
-            <Link color="foreground" href="#">
-              Features
+            <Link color="foreground" href="/hospital/dashboard">
+              Dashboard
             </Link>
           </NavbarItem>
           <NavbarItem isActive>
-            <Link href="#" aria-current="page" color="secondary">
-              Customers
+            <Link href="/hospital/donor-requests" aria-current="page" color="secondary">
+              Donor
             </Link>
           </NavbarItem>
           <NavbarItem>
             <Link color="foreground" href="#">
-              Integrations
+              Receiver Registration
             </Link>
           </NavbarItem>
         </NavbarContent>
-
+{/* 
         <NavbarContent as="div" justify="end">
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
@@ -70,9 +71,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
-        </NavbarContent>
+        </NavbarContent> */}
       </Navbar>
-
       {children}
     </div>
   );
