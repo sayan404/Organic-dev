@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/src/config/dbConfig";
 import organReceiverModal from "@/src/models/organReceiverModal";
+import axios from "axios";
 
 export async function POST(req: NextRequest) {
     try {
@@ -64,15 +65,24 @@ export async function POST(req: NextRequest) {
         });
 
         // Save the new organ request to the database
-        await newOrganRequest.save();
+        const savedNewOrganRequest = await newOrganRequest.save();
+        if (!savedNewOrganRequest) {
+            return NextResponse.json(
+                { message: "Organ request not created" },
+                { status: 500 }
+            );
+        }
+        // const matchedOrganRequests = await axios.get()
 
-        return NextResponse.json(
-            {
-                message: "Organ request created successfully",
-                organRequest: newOrganRequest,
-            },
-            { status: 201 }
-        );
+
+        // return NextResponse.json(
+        //     {
+        //         message: "Organ request created successfully",
+        //         organRequest: newOrganRequest,
+        //     },
+        //     { status: 201 }
+        // );
+
         //TODO: now instead of returning the response, we will put this record into the queue of the same organ type
     } catch (error: any) {
         console.log(error);
