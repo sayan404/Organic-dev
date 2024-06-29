@@ -11,6 +11,8 @@ const config: any = {
 };
 
 export async function uploadFiles(formData: any, organId: string) {
+  console.log('Uploading PDF file' , formData);
+  
   try {
     //db connect
     dbConnect();
@@ -44,7 +46,7 @@ export async function uploadFiles(formData: any, organId: string) {
     console.log(actual_content);
 
     //upload the content to the organ table
-    
+    // TODO db call
 
     return actual_content;
   } catch (error) {
