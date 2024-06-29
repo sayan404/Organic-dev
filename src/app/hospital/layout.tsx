@@ -1,3 +1,4 @@
+"use client"
 import {
   Navbar,
   NavbarBrand,
@@ -38,7 +39,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </Link>
           </NavbarItem>
         </NavbarContent>
-
+{/* 
         <NavbarContent as="div" justify="end">
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
@@ -70,9 +71,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
-        </NavbarContent>
+        </NavbarContent> */}
       </Navbar>
-
       {children}
     </div>
   );

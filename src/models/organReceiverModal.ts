@@ -8,7 +8,7 @@ interface IOrganRequest extends Document {
     patientDetailsName: string;
     patientDetailsAge: number;
     patientDetailsMedicalConditionExplanation: string;
-    severity: number; 
+    severity: number;
     patientCity: string;
     patientDistrict: string;
     patientPincode: string;
@@ -18,13 +18,14 @@ interface IOrganRequest extends Document {
     patientBloodGroup: string;
     patientMobileNo: string;
     patientEmailId: string;
+    allTextOrganData: string;
     patientOrgan: string;
-    patientOrganRelatedDocs: string; 
+    patientOrganRelatedDocs: string;
     referredDoctorName: string;
     referredDoctorRegId: string;
 }
 
-const organReceiverRequestSchema : Schema = new Schema(
+const organReceiverRequestSchema: Schema = new Schema(
     {
         hospitalId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -34,17 +35,15 @@ const organReceiverRequestSchema : Schema = new Schema(
         hospitalMobileNo: {
             type: String,
             required: true,
-            match: /^\d{10}$/, 
         },
         hospitalEmailId: {
             type: String,
             required: true,
-            match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
         },
         organType: {
             type: String,
             required: true,
-          },
+        },
         patientName: {
             type: String,
             required: true,
@@ -75,7 +74,6 @@ const organReceiverRequestSchema : Schema = new Schema(
         patientPincode: {
             type: String,
             required: true,
-            match: /^\d{6}$/, 
         },
         patientDOB: {
             type: String,
@@ -89,23 +87,24 @@ const organReceiverRequestSchema : Schema = new Schema(
         patientBloodGroup: {
             type: String,
             required: true,
-            enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
         },
         patientMobileNo: {
             type: String,
             required: true,
-            match: /^\d{10}$/, 
         },
         patientEmailId: {
             type: String,
             required: true,
-            match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
         },
         patientOrgan: {
             type: String,
             required: true
         },
         patientOrganRelatedDocs: {
+            type: String,
+            required: true,
+        },
+        allTextOrganData: {
             type: String,
             required: true,
         },
@@ -117,13 +116,13 @@ const organReceiverRequestSchema : Schema = new Schema(
             type: String,
             required: true,
         },
-        organAlotmentStatus : {
+        organAlotmentStatus: {
             type: String,
             required: true,
             enum: ["Pending", "Approved", "Canceled"],
             default: "Pending",
         },
-        
+
     },
     {
         timestamps: true,
