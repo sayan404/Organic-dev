@@ -26,7 +26,8 @@ export async function POST(req: NextRequest) {
             patientOrganRelatedDocs,
             referredDoctorName,
             referredDoctorRegId,
-            patientMedicalConditionExplanation
+            patientMedicalConditionExplanation,
+            organAlotmentStatus
         } = await req.json();
 
         // Validate required fields
@@ -59,6 +60,7 @@ export async function POST(req: NextRequest) {
             patientOrganRelatedDocs,
             referredDoctorName,
             referredDoctorRegId,
+            organAlotmentStatus
         });
 
         // Save the new organ request to the database
@@ -71,6 +73,7 @@ export async function POST(req: NextRequest) {
             },
             { status: 201 }
         );
+        //TODO: now instead of returning the response, we will put this record into the queue of the same organ type
     } catch (error: any) {
         console.log(error);
         return NextResponse.json(

@@ -8,7 +8,7 @@ interface IOrganRequest extends Document {
     patientDetailsName: string;
     patientDetailsAge: number;
     patientDetailsMedicalConditionExplanation: string;
-    severity: number; // Scale 1-10
+    severity: number; 
     patientCity: string;
     patientDistrict: string;
     patientPincode: string;
@@ -34,12 +34,12 @@ const organReceiverRequestSchema : Schema = new Schema(
         hospitalMobileNo: {
             type: String,
             required: true,
-            match: /^\d{10}$/, // Assuming a 10-digit mobile number format
+            match: /^\d{10}$/, 
         },
         hospitalEmailId: {
             type: String,
             required: true,
-            match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, // Email format validation
+            match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
         },
         organType: {
             type: String,
@@ -117,13 +117,20 @@ const organReceiverRequestSchema : Schema = new Schema(
             type: String,
             required: true,
         },
+        organAlotmentStatus : {
+            type: String,
+            required: true,
+            enum: ["Pending", "Approved", "Canceled"],
+            default: "Pending",
+        },
+        
     },
     {
         timestamps: true,
     }
 );
 
-export default mongoose.models.donors || mongoose.model<IOrganRequest>(
+export default mongoose.models.OrganReceiverRequest || mongoose.model<IOrganRequest>(
     "OrganReceiverRequest",
     organReceiverRequestSchema
 );
