@@ -47,14 +47,18 @@ const DonorSchema: Schema = new Schema(
         emailId: { type: String, required: true },
         occupation: { type: String, required: true },
         aadharNo: { type: String, required: true, unique: true },
-        donateRequests: [{
-            type: Schema.Types.ObjectId,
-            ref: "DonorRequest"
-        }]
+        organs: [{ type: String }],
+        status: {
+            type: String,
+            enum: ["Pending", "Donated", "Rejected"],
+            default: "Pending",
+        }
     },
     {
         timestamps: true,
     }
 );
 
-export default mongoose.models.donors || mongoose.model<IDonor>("Donor", DonorSchema);
+const Donor =  mongoose.models.Donor || mongoose.model<IDonor>("Donor", DonorSchema);
+
+export default Donor;

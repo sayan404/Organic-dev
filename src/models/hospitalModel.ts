@@ -46,12 +46,13 @@ const hospitalSchema: Schema = new Schema(
         },
         hospitalRegistrationNo: { type: String, required: true, unique: true },
         password: { type: String, required: true },
-        requests: [{ type: mongoose.Schema.Types.ObjectId, ref: "DonateRequest" }],
+        requests: [{ type: mongoose.Schema.Types.ObjectId, ref: "Donor" }],
     },
     {
         timestamps: true,
     }
 );
 
-export default mongoose.models.hospitals ||
-    mongoose.model<IHospital>("Hospital", hospitalSchema);
+const Hospital = mongoose.models.Hospital || mongoose.model<IHospital>("Hospital", hospitalSchema);
+
+export default Hospital;
