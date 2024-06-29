@@ -1,18 +1,7 @@
 'use server';
 import { handleError } from './utils';
 import axios from 'axios';
-// const fs = require('fs');
-// const FormData = require('form-data');
-
-// const formData = new FormData();
-// formData.append('file', fs.createReadStream('/path/to/file.pdf'));
-
-// const options = {
-//   headers: {
-//     'x-api-key': 'sec_xxxxxx',
-//     ...formData.getHeaders(),
-//   },
-// };
+import dbConnect from '@/src/config/dbConfig';
 
 const config: any = {
   headers: {
@@ -21,19 +10,16 @@ const config: any = {
   },
 };
 
-// const data = {
-//   url: 'https://uscode.house.gov/static/constitution.pdf',
-// };
-
-export async function uploadFiles({ formData }: any) {
+export async function uploadFiles(formData: any, organId: string) {
   try {
+    //db connect
+    dbConnect();
     const response = await axios.post(
-      'https://api.chatpdf.com/v1/sources/add-url',
+      'https://api.chatpdf.com/v1/sources/add-file',
       formData,
       {
         headers: {
           'x-api-key': 'sec_7vCnZxBllHl6L6CV2vYeA3PN5Ur6Kpbu',
-          ...formData.getHeaders(),
         },
       }
     );
@@ -43,7 +29,6 @@ export async function uploadFiles({ formData }: any) {
     const content = await axios.post(
       'https://api.chatpdf.com/v1/chats/message',
       {
-        // stream: true,
         sourceId: source_id,
         messages: [
           {
@@ -57,6 +42,9 @@ export async function uploadFiles({ formData }: any) {
 
     const actual_content = content.data.content;
     console.log(actual_content);
+
+    //upload the content to the organ table
+    
 
     return actual_content;
   } catch (error) {

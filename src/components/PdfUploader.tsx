@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { uploadFiles } from '../lib/actions/upload-pdf.action';
 
-const PdfUploader: React.FC = ({ setContent }: any) => {
+const PdfUploader: React.FC = ({ setContent, organId }: any) => {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -23,9 +23,9 @@ const PdfUploader: React.FC = ({ setContent }: any) => {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await uploadFiles(formData);
+    const response = await uploadFiles(formData, organId);
 
-    if (response.ok) {
+    if (response) {
       setContent(response);
       alert('File uploaded successfully');
     } else {
