@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/src/config/dbConfig';
 import EligibleDonorWithOrganDetail from '@/src/models/eligibleDonorWithOrganModel';
 import { uploadFiles } from '@/src/lib/actions/upload-pdf.action';
-import axios from 'axios';
 
 export async function GET(req: NextRequest) {
-    // fpr matching the organ type
-    // Ref is new Receiver's req 
     try {
         await dbConnect();
-        const organType = req.nextUrl.searchParams.get("organType");
+
+        const { searchParams } = new URL(req.url);
+        const organType = searchParams.get('organType');
+
         if (!organType) {
             return NextResponse.json(
                 { message: 'organType query parameter is required' },
@@ -98,44 +98,26 @@ export async function POST(req: NextRequest) {
         // Save the new entry to the database
         const newEligibleDonorWithOrganDetailReponseData = await newEligibleDonorWithOrganDetail.save();
         console.log("newEligibleDonorWithOrganDetailReponseData", newEligibleDonorWithOrganDetailReponseData);
-        let textData = "";
         try {
             if (formData) {
                 const fileTextData = await uploadFiles(formData, newEligibleDonorWithOrganDetailReponseData._id);
                 newEligibleDonorWithOrganDetail.allTextOrganData = fileTextData;
                 await newEligibleDonorWithOrganDetail.save();
-                textData = fileTextData
             }
         }
+
         catch (error: any) {
             console.log("Failed to genretae text data from pdf file", error);
 
         }
 
-        const organToBeMatched = {
-            organType,
-            bloodType,
-            organDescription,
-            allTextOrganData: textData
-        }
-        const message = "FROM_RECEIVER_TO_DONOR_ORGAN_MATCHER"
-        const matchedOrganRequests = await axios.post("http://localhost:3000/api/matcher", { message, organType, organToBeMatched })
-        if (matchedOrganRequests) {
-
-            return NextResponse.json(
-                {
-                    message: 'Got a receiver who really wants the organ',
-                    data: matchedOrganRequests,
-                },
-                { status: 201 }
-            );
-        }
-        else {
-            return NextResponse.json(
-                { message: 'No receiver found' },
-                { status: 200 }
-            );
-        }
+        return NextResponse.json(
+            {
+                message: 'Eligible donor with organ details added successfully',
+                data: newEligibleDonorWithOrganDetail,
+            },
+            { status: 201 }
+        );
     } catch (error: any) {
         console.error(error);
         return NextResponse.json(

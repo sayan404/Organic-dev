@@ -21,11 +21,10 @@ import {
       <div>
         <Navbar className="shadow-lg">
           <NavbarBrand>
-            {/* <AcmeLogo /> */}
-            <p className="font-bold text-inherit">ACME</p>
+            <img src="./OrganicLogo.png" alt="OrganicLogo" className="w-32 overflow-hidden" />
           </NavbarBrand>
   
-          <NavbarContent className="hidden sm:flex gap-4" justify="center">
+          {/* <NavbarContent className="hidden sm:flex gap-4" justify="center">
             <NavbarItem>
               <Link color="foreground" href="#">
                 Home
@@ -41,11 +40,12 @@ import {
                 Statistics
               </Link>
             </NavbarItem>
-          </NavbarContent>
+          </NavbarContent> */}
   
           <NavbarContent as="div" justify="end">
-            <Button onClick={() => router.push("donor/add")}>Donor Registration</Button>
-            <Button onClick={() => router.push("hospital/dashboard")}>Hospital Registration</Button>
+            <Button onClick={() => router.push("/donor/add")}>Donor Registration</Button>
+            {/* <Button onClick={() => router.push("/hospital/dashboard")}>Hospital Registration</Button> */}
+            <Button onClick={() => router.push("/hospital/login")}>Hospital Login</Button>
           </NavbarContent>
         </Navbar>
   

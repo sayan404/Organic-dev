@@ -1,9 +1,13 @@
 import dbConnect from "@/src/config/dbConfig";
+import { getDataFromToken } from "@/src/lib/actions/authCheck";
 import Hospital from "@/src/models/hospitalModel";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
     try {
+        if(!getDataFromToken(req)) {
+            return NextResponse.redirect(new URL('/login', req.url));
+        }
         await dbConnect();
         
         const hospitalId = req.nextUrl.searchParams.get("hospitalId");

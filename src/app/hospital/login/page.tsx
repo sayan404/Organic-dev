@@ -53,10 +53,8 @@ const AddDonorPage = () => {
         const donorRequestDataResponse = await axios.post(
           `/api/hospital/login`,
           {
-            params: {
               hospitalRegistrationNo,
-              password,
-            },
+              password
           }
         );
 
@@ -67,7 +65,7 @@ const AddDonorPage = () => {
           console.log("Donation Request Sent Successfully!");
           // router.push("/hospital/home");
           toast.success("Donation Request Sent Successfully!");
-          router.push("/hospital/donor-requests");
+          router.push("/hospital/dashboard");
         } else {
           toast.error("Invalid hospitalRegistrationNo or password");
         }
