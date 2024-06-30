@@ -12,7 +12,7 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
-import * as animationData from "../../../../../public/healthLottie.json";
+import * as animationData from "../../../../public/healthLottie.json";
 import { useCallback, useState } from "react";
 import {
   ArrowLeftIcon,
@@ -50,7 +50,7 @@ const AddDonorPage = () => {
     setClicked(true);
     async function fetchData() {
       setTimeout(() => {
-        toast.success("Donation Request Sent Successfully!");
+        toast.success("Searching Request Sent Successfully!");
         router.push("/hospital/potential-donors");
       }, 3000);
     }
@@ -84,7 +84,7 @@ const AddDonorPage = () => {
       <div className="flex flex-col w-[600px] flex-wrap md:flex-nowrap gap-4">
         <div className="p-8 rounded-xl shadow-xl flex flex-col gap-4 border-1">
           <div className="text-2xl font-semibold">
-            Upload Checkup related document in .pdf format
+            Upload medical details in .pdf format
           </div>
           <Divider />
           <Input
