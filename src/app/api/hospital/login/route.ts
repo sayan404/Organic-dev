@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
     await dbConnect();
 
     const { hospitalRegistrationNo, password } = await req.json();
+    console.log(hospitalRegistrationNo, password);
 
     try {
         await dbConnect();
@@ -23,10 +24,11 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const isPasswordValid = await bcrypt.compare(
-            password,
-            hospital.password
-        );
+        // const isPasswordValid = await bcrypt.compare(
+        //     password,
+        //     hospital.password
+        // );
+        const isPasswordValid = password == hospital.password;
         if (!isPasswordValid) {
             return NextResponse.json(
                 {
