@@ -71,12 +71,24 @@ const page = () => {
               3 Matches
             </p>
             <div>
-              {matchedOrgans.map((item: any) => {
+              {/* {matchedOrgans.map((item: any) => {
                 <p>
                   <span>id: ${item.id}</span>
                   <span>${item.percentage}</span>
                 </p>
-              })}
+              })} */}
+              <p className='flex my-2 justify-between border border-slate-600 bg-orange-200 rounded-xl px-2 py-2'>
+                <p>id: ed125</p>
+                <p>85%</p>
+              </p>
+              <p className='flex my-2 justify-between border border-slate-600 bg-orange-200 rounded-xl px-2 py-2'>
+                <p>id: ved125</p>
+                <p>78%</p>
+              </p>
+              <p className='flex my-2 justify-between border border-slate-600 bg-orange-200 rounded-xl px-2 py-2'>
+                <p>id: ec4555</p>
+                <p>65%</p>
+              </p>
             </div>
           </div>
         </div>
@@ -95,4 +107,3 @@ const page = () => {
 // };
 
 export default page;
-

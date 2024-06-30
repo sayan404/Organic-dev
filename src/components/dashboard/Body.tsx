@@ -9,7 +9,7 @@ export const Body = () => {
       <Banner />
       <Metric />
       <Charts />
-      <Table />
+      {/* <Table /> */}
     </div>
   );
 };

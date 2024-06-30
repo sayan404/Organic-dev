@@ -7,7 +7,7 @@ export const Charts = () => {
     <>
       <ChartWrapper>
         <div className="w-full">
-          <Header header_text={"Performance"} />
+          <Header header_text={"Statistics"} />
           <ChartComponent />
         </div>
       </ChartWrapper>
@@ -24,7 +24,7 @@ const state = {
       },
     },
     xaxis: {
-      categories: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      categories: ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"]
     },
     dataLabels: {
       enabled: false,
@@ -41,11 +41,11 @@ const state = {
   },
   series: [
     {
-      name: "Instagram",
+      name: "Transplants",
       data: [30, 80, 45, 100, 50, 60, 90, 91],
     },
     {
-      name: "Facebook",
+      name: "Donor Registrations",
       data: [20, 50, 90, 40, 87, 60, 60, 81],
     },
   ],
