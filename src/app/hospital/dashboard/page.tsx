@@ -1,10 +1,22 @@
+"use client"
 
-const HospitalDashboardPage = () => {
+import { Topbar } from '@/src/components/dashboard/Topbar';
+import { Body } from '@/src/components/dashboard/Body';
+import { Sidebar } from '@/src/components/dashboard/Sidebar';
+const Dashboard = () => {
   return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
+    <>
+      <div className='md:bg-[#F2F4F7] flex'>
+        <div className='w-[20%] h-screen hidden md:flex'>
+          <Sidebar />
+        </div>
+        <div className='w-full md:w-[80%]'>
+          {/* <Topbar /> */}
+          <Body />
+        </div>
+      </div>
+    </>
   );
 };
 
-export default HospitalDashboardPage;
+export default Dashboard;

@@ -6,7 +6,7 @@ import dbConnect from "@/src/config/dbConfig";
 export async function POST(req: NextRequest) {
     try {
         await dbConnect();
-
+        const body = await req.json();
         const {
             name,
             address,
@@ -24,8 +24,9 @@ export async function POST(req: NextRequest) {
             registeredFor,
             hospitalRegistrationNo,
             password,
-        } = await req.json();
+        } = body;
 
+        
         // Check if a hospital with the same HRN or primary email already exists
         const existingHospital = await Hospital.findOne({
             $or: [{ hospitalRegistrationNo }, { primaryEmail }],
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
+        console.log("hashedPassword - 0", hashedPassword);
 
         // Create a new hospital
         const newHospital = new Hospital({
@@ -58,12 +60,14 @@ export async function POST(req: NextRequest) {
             secondaryEmail,
             registeredFor,
             hospitalRegistrationNo,
-            password: hashedPassword,
+            password,
             requests: [],
         });
+        console.log("newHospital - 1", newHospital);
 
         // Save the new hospital to the database
-        await newHospital.save();
+        const data = await newHospital.save();
+        console.log("data - 2", data);
 
         return NextResponse.json(
             {

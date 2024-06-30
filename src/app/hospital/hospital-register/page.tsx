@@ -21,11 +21,32 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/16/solid";
 import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+const initialState = {
+  name: "",
+  address: "",
+  state: "",
+  city: "",
+  district: "",
+  street: "",
+  pincode: "",
+  typeOfHospital: "",
+  estd: 0,
+  primaryMobileNo: "",
+  secondaryMobileNo: "",
+  primaryEmail: "",
+  secondaryEmail: "",
+  registeredFor: "",
+  hospitalRegistrationNo: "",
+  password: "",
+};
 
 const AddDonorPage = () => {
+  const router = useRouter();
   const [tab, setTab] = useState(0);
   const [deadDonor, setDeadDonor] = useState(false);
-
+  const [hospitalData, setHospitalData] = useState(initialState);
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -34,16 +55,30 @@ const AddDonorPage = () => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+  // name,
+  // address,
+  // state,
+  // city,
+  // district,
+  // street,
+  // pincode,
+  // typeOfHospital,
+  // estd,
+  // primaryMobileNo,
+  // secondaryMobileNo,
+  // primaryEmail,
+  // secondaryEmail,
+  // registeredFor,
+  // hospitalRegistrationNo,
+  // password: hashedPassword,
   const tabNames = useCallback(() => {
     return [
-      "Donor",
+      "Hospital",
       "Basics",
       "Address",
-      "Personal Details",
+      "Contacts",
       "ID Proof",
-      "Nominee Details",
-      "Medical Details",
-      "Preferences",
+      "Password",
     ];
   }, []);
   const isLastTab = useCallback(() => {
@@ -51,19 +86,82 @@ const AddDonorPage = () => {
   }, [tab]);
   const handleClick = useCallback(() => {
     if (isLastTab()) {
+      const fetchData = async () => {
+        console.log("hospitalData", hospitalData);
+        try {
+          if (!hospitalData.password) {
+            hospitalData.password = "1234";
+          }
+          if (!hospitalData.address) {
+            hospitalData.address = "Kolkata, West Bengal, India";
+          }
+          if (!hospitalData.city || !hospitalData.state || !hospitalData.name || !hospitalData.pincode || !hospitalData.primaryEmail || !hospitalData.primaryMobileNo || !hospitalData.hospitalRegistrationNo || !hospitalData.registeredFor || !hospitalData.typeOfHospital || !hospitalData.estd) {
+            toast.error("Enter all the data");
+          }
+          const hospitalRegResponse = await axios.post(
+            `/api/hospital/registration`,
+            {
+              name : hospitalData.name, 
+              address : hospitalData.address,
+              state : hospitalData.state,
+              city : hospitalData.city,
+              district : hospitalData.district,
+              street : hospitalData.street,
+              pincode : hospitalData.pincode,
+              typeOfHospital : hospitalData.typeOfHospital,
+              estd : hospitalData.estd,
+              primaryMobileNo : hospitalData.primaryMobileNo,
+              secondaryMobileNo : hospitalData.secondaryMobileNo,
+              primaryEmail : hospitalData.primaryEmail,
+              secondaryEmail : hospitalData.secondaryEmail,
+              registeredFor : hospitalData.registeredFor,
+              hospitalRegistrationNo : hospitalData.hospitalRegistrationNo,
+              password : hospitalData.password
+            }
+          );
+          console.log("hospitalRegResponse", hospitalRegResponse);
+
+          if (
+            hospitalRegResponse.status === 201 ||
+            hospitalRegResponse.data.success
+          ) {
+            console.log("Donation Request Sent Successfully!");
+            // router.push("/hospital/home");
+            toast.success("Donation Request Sent Successfully!");
+            router.push("/hospital/donor-requests");
+          } else {
+            toast.error("Something went wrong! Please try again later.");
+          }
+        } catch (error: any) {
+          toast.error("Something went wrong!");
+        }
+      };
+      fetchData();
       toast.success("Donation Request Sent Successfully!");
     } else {
       setTab((prev) => prev + 1);
     }
   }, [isLastTab, setTab]);
 
+  const handleChange = (e: any) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    console.log("name, value", name, value);
+    setHospitalData({
+      ...hospitalData,
+      [name]: value,
+    });
+  };
+
   return (
-    <div className="flex h-full justify-center items-center">
+    <div className="flex h-full justify-center items-center mt-24">
       <div className="flex flex-col w-[600px] flex-wrap md:flex-nowrap gap-4">
         {/* <Lottie options={defaultOptions} height={200} width={200} /> */}
 
         <div className="p-8 rounded-xl shadow-xl flex flex-col gap-4 border-1">
-          <div className="text-2xl font-semibold">Register as a Donor</div>
+          <div className="text-2xl font-semibold">
+            Registration for Hospital
+          </div>
           <Divider />
           <Breadcrumbs>
             {tabNames()
@@ -76,135 +174,157 @@ const AddDonorPage = () => {
           </Breadcrumbs>
           {tab === 0 && (
             <>
-              <Input type="text" label="Name" variant="faded" required />
+              <Input
+                name="name"
+                type="text"
+                label="Name"
+                variant="faded"
+                required
+                onChange={handleChange}
+              />
               <Input
                 type="text"
-                label="Mother's Name"
+                label="Type of Hospital (e.g. Government/Private)"
                 variant="faded"
+                name="typeOfHospital"
+                onChange={handleChange}
                 required
               />
               <Input
                 type="text"
-                label="Father's Name"
+                label="ESTD."
                 variant="faded"
+                name="estd"
+                onChange={handleChange}
                 required
               />
             </>
           )}
           {tab === 1 && (
             <>
-              <Input type="text" label="State" variant="faded" required />
-              <Input type="text" label="City" variant="faded" required />
-              <Input type="text" label="District" variant="faded" required />
-              <Input type="text" label="Street" variant="faded" required />
-              <Input type="text" label="Pincode" variant="faded" required />
+              <Input
+                type="text"
+                name="state"
+                label="State"
+                variant="faded"
+                required
+                onChange={handleChange}
+              />
+              <Input
+                type="text"
+                name="city"
+                label="City"
+                variant="faded"
+                required
+                onChange={handleChange}
+              />
+              <Input
+                type="text"
+                name="district"
+                label="District"
+                variant="faded"
+                required
+                onChange={handleChange}
+              />
+              <Input
+                type="text"
+                name="street"
+                label="Street"
+                variant="faded"
+                required
+                onChange={handleChange}
+              />
+              <Input
+                type="text"
+                name="address"
+                label="Address"
+                variant="faded"
+                required
+                onChange={handleChange}
+              />
+              <Input
+                type="text"
+                name="pincode"
+                label="Pincode"
+                variant="faded"
+                required
+                onChange={handleChange}
+              />
             </>
           )}
           {tab === 2 && (
             <>
-              <DateInput label="Date of Birth" variant="faded" />
-              <Select label="Select Gender">
-                <SelectItem key={"M"}>Male</SelectItem>
-                <SelectItem key={"F"}>Female</SelectItem>
-              </Select>
               <Input
                 type="number"
-                label="Phone Number"
+                label="Primary Mobile Number"
                 variant="faded"
+                name="primaryMobileNo"
+                onChange={handleChange}
                 required
               />
-              <Input type="email" label="Email ID" variant="faded" required />
-              <Input type="text" label="Occupation" variant="faded" required />
+              <Input
+                type="number"
+                label="Secondary Phone Number"
+                variant="faded"
+                onChange={handleChange}
+                name="secondaryMobileNo"
+                required
+              />
+              <Input
+                type="email"
+                label="Primary Email ID"
+                variant="faded"
+                required
+                name="primaryEmail"
+                onChange={handleChange}
+              />
+              <Input
+                type="text"
+                label="Secondary Email ID"
+                variant="faded"
+                required
+                name="secondaryEmail"
+                onChange={handleChange}
+              />
             </>
           )}
           {tab === 3 && (
             <>
-              <Select label="Select ID Proof">
-                <SelectItem key={"Aadhar"}>Aadhar</SelectItem>
-                <SelectItem key={"PAN"}>PAN</SelectItem>
-                <SelectItem key={"Voter"}>Voter ID</SelectItem>
-              </Select>
-              <Input type="text" label="ID Number" variant="faded" required />
+              <Input
+                type="text"
+                label="Hospital Registration No (HRN No.)"
+                variant="faded"
+                name="hospitalRegistrationNo"
+                required
+                onChange={handleChange}
+              />
+
+              <Input
+                type="text"
+                label="It can operates on (e.g. Retrieval | Transplant | both )"
+                variant="faded"
+                name="registeredFor"
+                required
+                onChange={handleChange}
+              />
             </>
           )}
           {tab === 4 && (
             <>
-              <Checkbox
-                size="lg"
-                checked={deadDonor}
-                onChange={() => setDeadDonor(!deadDonor)}
-              >
-                Donor is alive
-              </Checkbox>
-              {deadDonor && (
-                <>
-                  <Input
-                    type="text"
-                    label="Nominee Name"
-                    variant="faded"
-                    required={deadDonor}
-                  />
-                  <div>Nominee Address</div>
-                  <Input
-                    type="text"
-                    label="State"
-                    variant="faded"
-                    required={deadDonor}
-                  />
-                  <Input
-                    type="text"
-                    label="City"
-                    variant="faded"
-                    required={deadDonor}
-                  />
-                  <Input
-                    type="text"
-                    label="District"
-                    variant="faded"
-                    required={deadDonor}
-                  />
-                  <Input
-                    type="text"
-                    label="Street"
-                    variant="faded"
-                    required={deadDonor}
-                  />
-                </>
-              )}
-            </>
-          )}
-          {tab === 5 && (
-            <>
-              <Input type="text" label="Blood Group" variant="faded" required />
-              <CheckboxGroup label="Organ(s) to donate">
-                <Checkbox size="md" value={"kidney"}>
-                  Kidney
-                </Checkbox>
-                <Checkbox size="md" value={"Liver"}>
-                  Liver
-                </Checkbox>
-                <Checkbox size="md" value={"Heart"}>
-                  Heart
-                </Checkbox>
-                <Checkbox size="md" value={"Lungs"}>
-                  Lungs
-                </Checkbox>
-                <Checkbox size="md" value={"Pancreas"}>
-                  Pancreas
-                </Checkbox>
-                <Checkbox size="md" value={"Small Intestine"}>
-                  Small Intestine
-                </Checkbox>
-              </CheckboxGroup>
-            </>
-          )}
-          {tab === 6 && (
-            <>
-              <Select label="Select Hospital">
-                <SelectItem key={"Apollo"}>Apollo</SelectItem>
-                <SelectItem key={"Fortis"}>Fortis</SelectItem>
-                <SelectItem key={"Max"}>Max</SelectItem>
-              </Select>
+              <Input
+                type="password"
+                label="Password"
+                variant="faded"
+                required
+                name="password"
+                onChange={handleChange}
+              />
+              <Input
+                type="password"
+                label="Confirm Password"
+                variant="faded"
+                required
+              />
             </>
           )}
           <div className="mt-auto">

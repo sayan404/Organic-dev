@@ -8,13 +8,13 @@ interface IHospital extends Document {
     district: string;
     street: string;
     pincode: string;
-    typeOfHospital: "govt" | "non govt" | "semi govt";
+    typeOfHospital: string;
     estd: number;
     primaryMobileNo: string;
     secondaryMobileNo?: string;
     primaryEmail: string;
     secondaryEmail?: string;
-    registeredFor: "Retrieval" | "Transplant" | "both";
+    registeredFor: string;
     hospitalRegistrationNo: string;
     password: string;
     requests: mongoose.Types.ObjectId[];
@@ -31,7 +31,6 @@ const hospitalSchema: Schema = new Schema(
         pincode: { type: String, required: true },
         typeOfHospital: {
             type: String,
-            enum: ["govt", "non govt", "semi govt"],
             required: true,
         },
         estd: { type: Number, required: true },
@@ -41,7 +40,6 @@ const hospitalSchema: Schema = new Schema(
         secondaryEmail: { type: String },
         registeredFor: {
             type: String,
-            enum: ["Retrieval", "Transplant", "both"],
             required: true,
         },
         hospitalRegistrationNo: { type: String, required: true, unique: true },

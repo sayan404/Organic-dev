@@ -12,7 +12,7 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
-import * as animationData from "../../../../public/healthLottie.json";
+import * as animationData from "../../../../../public/healthLottie.json";
 import { useCallback, useState } from "react";
 import {
   ArrowLeftIcon,
@@ -27,6 +27,10 @@ const AddDonorPage = () => {
   const router = useRouter();
   const [tab, setTab] = useState(0);
   const [hospitalRegistrationNo, setHospitalRegistrationNo] = useState("");
+  const [clicked, setClicked] = useState(Boolean);
+  const [formData, setFormData] = useState({
+    checkupRelatedDocument: null as File | null,
+  });
   const [password, setPassword] = useState("");
   const defaultOptions = {
     loop: true,
@@ -43,64 +47,62 @@ const AddDonorPage = () => {
     return tab === tabNames().length - 2;
   }, [tab]);
   const handleClick = useCallback(() => {
+    setClicked(true);
     async function fetchData() {
-      console.log(
-        "hospitalRegistrationNo, password",
-        hospitalRegistrationNo,
-        password
-      );
-      try {
-        const donorRequestDataResponse = await axios.post(
-          `/api/hospital/login`,
-          {
-            params: {
-              hospitalRegistrationNo,
-              password,
-            },
-          }
-        );
-
-        if (
-          donorRequestDataResponse.status === 200 ||
-          donorRequestDataResponse.data.success
-        ) {
-          console.log("Donation Request Sent Successfully!");
-          // router.push("/hospital/home");
-          toast.success("Donation Request Sent Successfully!");
-          router.push("/hospital/donor-requests");
-        } else {
-          toast.error("Invalid hospitalRegistrationNo or password");
-        }
-      } catch (error: any) {
-        toast.error("Invalid hospitalRegistrationNo or password");
-      }
+      setTimeout(() => {
+        toast.success("Donation Request Sent Successfully!");
+        router.push("/hospital/hospital-register");
+      }, 3000);
     }
     fetchData();
     if (isLastTab()) {
       toast.success("Donation Request Sent Successfully!");
     }
   }, [hospitalRegistrationNo, password]);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFormData({
+        ...formData,
+        checkupRelatedDocument: e.target.files[0],
+      });
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
   //   hospitalRegistrationNo, password
   return (
     <div className="flex h-full justify-center items-center mt-32">
       <div className="flex flex-col w-[600px] flex-wrap md:flex-nowrap gap-4">
         <div className="p-8 rounded-xl shadow-xl flex flex-col gap-4 border-1">
-          <div className="text-2xl font-semibold">Login for Hospital</div>
+          <div className="text-2xl font-semibold">
+            Upload Checkup related document in .pdf format
+          </div>
           <Divider />
-          <Input type="text" label="Hospital Name" variant="faded" required />
           <Input
             type="text"
-            label="hospital Registration No"
-            onChange={(e) => setHospitalRegistrationNo(e.target.value)}
+            label="Enter the checkupResults in brief description"
             variant="faded"
             required
+            name="checkupResults"
+            onChange={handleChange}
           />
+          <p>Enter the checkup Reports in .pdf format</p>
           <Input
-            type="password"
-            label="Password"
-            onChange={(e) => setPassword(e.target.value)}
+          type="file"
+            // label="Enter the checkup Reports in .pdf format"
             variant="faded"
             required
+            name="checkupRelatedDocument"
+            onChange={handleFileChange}
           />
           <div className="mt-auto">
             <div className="flex gap-4 w-full">
@@ -112,12 +114,10 @@ const AddDonorPage = () => {
                 className="w-full"
                 endContent={<CheckCircleIcon width={20} />}
               >
-                Submit
+                {!clicked ? <> Submit </> : <>Uploading...</>}
               </Button>
             </div>
           </div>
-          {/* @ts-ignore */}
-         <p> Donot have an account?{" "} <span onClick={() => router.push("/hospital/hospital-register")} className="font-bold text-amber-600">Register</span></p>
         </div>
       </div>
       <Toaster />
