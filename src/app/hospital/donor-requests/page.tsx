@@ -6,14 +6,14 @@ import { useEffect } from "react";
 import axios from "axios";
 
 const DonorRequestsPage = () => {
-  useEffect(() => {
-    // document.title = "Donor Requests - ACME";
-    const hospitalId = "1";
-    // async function fetchData() {
-    //   const donorRequestDataResponse = await axios.get(`/api/hospital/donorRequest?hospitalId=${hospitalId}`);
-    // }
-    // fetchData();
-  }, []);
+  // useEffect(() => {
+  //   // document.title = "Donor Requests - ACME";
+  //   const hospitalId = "1";
+  //   // async function fetchData() {
+  //   //   const donorRequestDataResponse = await axios.get(`/api/hospital/donorRequest?hospitalId=${hospitalId}`);
+  //   // }
+  //   // fetchData();
+  // }, []);
   return (
     <div className="mx-[100px] my-[40px]">
       <div className="flex justify-between">

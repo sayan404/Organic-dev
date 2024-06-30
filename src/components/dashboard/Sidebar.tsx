@@ -24,6 +24,7 @@ export const Sidebar = () => {
               <Menu
                 key={index}
                 section_title={item.section_title}
+                // @ts-ignore
                 section_items={item.section_items}
               />
             );
