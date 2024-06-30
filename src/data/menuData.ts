@@ -32,7 +32,7 @@ export const menuData = [
         sub_links: [
           {
             name: 'Search Organ',
-            navLink: 'hospital/search-organs',
+            navLink: '/hospital/search-organs',
           },
         ],
       },
